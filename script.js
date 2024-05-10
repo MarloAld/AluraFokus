@@ -15,7 +15,7 @@ const iniciarOuPausarBt = document.querySelector('#start-pause span')
 const imagemPlayPause = document.querySelector('.app__card-primary-butto-icon')
 const tempoNaTela = document.querySelector('#timer')
 
-let tempoDecorridoEmSegundos = 1500
+let tempoDecorridoEmSegundos = 15
 let intervaloId = null
 
 musica.loop = true;
@@ -29,7 +29,7 @@ musicaFocoInput.addEventListener('change', () => {
 })
 
 focoBt.addEventListener('click', () => {
-    tempoDecorridoEmSegundos = 1500
+    tempoDecorridoEmSegundos = 15
     alterarContexto('foco')
     focoBt.classList.add('active')
 });
@@ -81,8 +81,13 @@ function alterarContexto(contexto){
 
 const contagemRegressiva = () => {
     if(tempoDecorridoEmSegundos <= 0){
-        zerar()
         beep.play()
+        const focoAtivo = html.getAttribute('data-contexto') == 'foco'
+        if(focoAtivo){
+            const evento = new CustomEvent('FocoFinalizado')
+            document.dispatchEvent(evento)
+        }
+        zerar()
         return
     }
     tempoDecorridoEmSegundos -= 1;
